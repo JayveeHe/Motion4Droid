@@ -51,7 +51,6 @@ public class RandomForest {
         return randomForest;
     }
     public static ArrayList<Map> loadRandomForestByJSON(String jsonStr) {
-//        String strjson = FileUtils.File2str(jsonPath, "utf-8");
         List<Map<String, Map>> forest = (List<Map<String, Map>>) JSON.parse(jsonStr);
         System.out.println(forest);
         ArrayList<Map> randomForest = new ArrayList<>(0);

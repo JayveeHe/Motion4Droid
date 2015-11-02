@@ -10,8 +10,15 @@ import java.io.*;
  * Created by jayvee on 15/10/30.
  */
 public class SensorDataUtils {
-    public static float[] transXYZ2InputData(float[][] xyzlist) throws IOException {
-        // trans raw sensor data into RF classifier input data
+    /**
+     * trans raw sensor data into RF classifier input data
+     *
+     * @param xyzlist   raw data
+     * @param dimOffset offset of handle raw data dim.(when handling xyz data, dimOffset=0; magnetic data, dimOffset=3)
+     * @return dim=12 input data
+     * @throws IOException
+     */
+    public static float[] transXYZ2InputData(float[][] xyzlist, int dimOffset) throws IOException {
         // windows = 50 stride=50
 //        if (xyzlist.length >= 50) {
         // only pick 50 point of data
@@ -33,13 +40,14 @@ public class SensorDataUtils {
         float[] absMinList = new float[LISTSIZE];
         for (int i = 0; i < LISTSIZE; i++) {
             // get first level features
+            float[] xyzdata = {xyzlist[i][dimOffset], xyzlist[i][1 + dimOffset], xyzlist[i][2 + dimOffset]};
             float mod = 0;
             float absMin = 0;
             float absMax = 0;
-            mod = calMod(xyzlist[i]);
-            float absX = Math.abs(xyzlist[i][0]);
-            float absY = Math.abs(xyzlist[i][1]);
-            float absZ = Math.abs(xyzlist[i][2]);
+            mod = calMod(xyzdata);
+            float absX = Math.abs(xyzdata[0]);
+            float absY = Math.abs(xyzdata[1]);
+            float absZ = Math.abs(xyzdata[2]);
             if (absX > absY) {
                 absMax = absX;
                 absMin = absY;
@@ -76,13 +84,36 @@ public class SensorDataUtils {
                 meanMod, stdMod, minMod, maxMod};
     }
 
-//    else
-//
-//    {
-//        throw new IOException("input size is not correct");
-//    }
 
-//}
+    /**
+     * Normalize raw input data when neccessary
+     *
+     * @param inputDataList
+     * @return normalized input data list
+     */
+    public static float[][] normalizeMagnetXYZData(float[][] inputDataList) {
+        // inputDataList shape=50*24
+        int numDim = inputDataList[0].length;
+        float[] minEachDim = new float[numDim];
+        for (int i = 0; i < numDim; i++) {
+            minEachDim[i] = Float.MAX_VALUE;
+        }
+        float[] maxEachDim = new float[numDim];
+        // get min or max of each dim
+        for (float[] inputData : inputDataList) {
+            for (int i = 0; i < numDim; i++) {
+                maxEachDim[i] = maxEachDim[i] > inputData[i] ? maxEachDim[i] : inputData[i];
+                minEachDim[i] = minEachDim[i] < inputData[i] ? minEachDim[i] : inputData[i];
+            }
+        }
+        // normalize each data
+        for (float[] inputData : inputDataList) {
+            for (int i = 0; i < numDim; i++) {
+                inputData[i] = (inputData[i] - minEachDim[i]) / (maxEachDim[i] - minEachDim[i]);
+            }
+        }
+        return inputDataList;
+    }
 
     private static float calMod(float[] xyz) {
         float mod = 0;

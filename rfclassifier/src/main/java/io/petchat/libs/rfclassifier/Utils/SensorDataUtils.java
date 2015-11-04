@@ -18,7 +18,7 @@ public class SensorDataUtils {
      * @return dim=12 input data
      * @throws IOException
      */
-    public static float[] transXYZ2InputData(float[][] xyzlist, int dimOffset) throws IOException {
+    public static float[] transXYZ2InputData(float[][] xyzlist, int dimOffset) throws IOException, IndexOutOfBoundsException {
         // windows = 50 stride=50
 //        if (xyzlist.length >= 50) {
         // only pick 50 point of data
@@ -57,6 +57,9 @@ public class SensorDataUtils {
             }
             absMax = absZ > absMax ? absZ : absMax;
             absMin = absZ < absMin ? absZ : absMin;
+            modList[i] = mod;
+            absMaxList[i] = absMax;
+            absMinList[i] = absMin;
             // get second level features
             meanMod += mod;
             meanAbsMax += absMax;
@@ -68,9 +71,9 @@ public class SensorDataUtils {
             minAbsMax = minAbsMax < absMax ? minAbsMax : absMax;
             minAbsMin = minAbsMin < absMin ? minAbsMin : absMin;
         }
-        meanMod /= meanMod / LISTSIZE;
-        meanAbsMax /= meanAbsMax / LISTSIZE;
-        meanAbsMin /= meanAbsMin / LISTSIZE;
+        meanMod /= LISTSIZE;
+        meanAbsMax /= LISTSIZE;
+        meanAbsMin /= LISTSIZE;
         for (int i = 0; i < LISTSIZE; i++) {
             stdMod += Math.pow((modList[i] - meanMod), 2);
             stdAbsMax += Math.pow((absMaxList[i] - meanAbsMax), 2);
@@ -154,6 +157,62 @@ public class SensorDataUtils {
         }
 
         return null;
+    }
+
+    /**
+     * trans XYZ data into watchphone input data
+     * @param rawXYZ
+     * @return
+     */
+    public static float[] transXYZ2WatchPhoneData(float[][] rawXYZ) {
+        final int LISTSIZE = rawXYZ.length;
+        float meanX = 0;
+        float meanY = 0;
+        float meanZ = 0;
+        float stdX = 0;
+        float stdY = 0;
+        float stdZ = 0;
+        float minX = Float.MAX_VALUE;
+        float minY = Float.MAX_VALUE;
+        float minZ = Float.MAX_VALUE;
+        float maxX = 0;
+        float maxY = 0;
+        float maxZ = 0;
+        float[] xList = new float[LISTSIZE];
+        float[] yList = new float[LISTSIZE];
+        float[] zList = new float[LISTSIZE];
+        for (int i = 0; i < LISTSIZE; i++) {
+//             get second level features
+            float x = rawXYZ[i][0];
+            float y = rawXYZ[i][1];
+            float z = rawXYZ[i][2];
+            xList[i] = x;
+            yList[i] = y;
+            zList[i] = z;
+            meanX += x;
+            meanY += y;
+            meanZ += z;
+            maxX = maxX > x ? maxX : x;
+            maxY = maxY > y ? maxY : y;
+            maxZ = maxZ > z ? maxZ : z;
+            minX = minX < x ? minX : x;
+            minY = minY < y ? minY : y;
+            minZ = minZ < z ? minZ : z;
+        }
+        meanX /= LISTSIZE;
+        meanY /= LISTSIZE;
+        meanZ /= LISTSIZE;
+        for (int i = 0; i < LISTSIZE; i++) {
+            stdX += Math.pow((xList[i] - meanX), 2);
+            stdY += Math.pow((yList[i] - meanY), 2);
+            stdZ += Math.pow((zList[i] - meanZ), 2);
+        }
+        stdX = (float) Math.sqrt(stdX);
+        stdY = (float) Math.sqrt(stdY);
+        stdZ = (float) Math.sqrt(stdZ);
+        return new float[]{meanY, stdY, minY, maxY,
+                meanZ, stdZ, minZ, maxZ,
+                meanX, stdX, minX, maxX};
     }
 
 }

@@ -1,5 +1,6 @@
 package io.petchat.libs.rfclassifier.Utils;
 
+import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -165,6 +166,7 @@ public class SensorDataUtils {
      * @return
      */
     public static float[] transXYZ2WatchPhoneData(float[][] rawXYZ) {
+        Log.d("isWatchPhone","==>trans data"+rawXYZ.length+"===="+rawXYZ[0].length);
         final int LISTSIZE = rawXYZ.length;
         float meanX = 0;
         float meanY = 0;

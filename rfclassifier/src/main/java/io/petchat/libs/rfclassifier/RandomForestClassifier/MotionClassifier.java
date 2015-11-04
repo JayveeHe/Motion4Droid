@@ -1,6 +1,7 @@
 package io.petchat.libs.rfclassifier.RandomForestClassifier;
 
 import android.content.Context;
+import android.util.Log;
 import io.petchat.libs.rfclassifier.R;
 import io.petchat.libs.rfclassifier.Utils.FileUtils;
 import io.petchat.libs.rfclassifier.Utils.SensorDataUtils;
@@ -33,7 +34,7 @@ public class MotionClassifier {
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_drivesit)), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_drivesit)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
         this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
     }
 
@@ -141,7 +142,9 @@ public class MotionClassifier {
      * @param accXYZ acc reading of 50.
      */
     public boolean isWatchPhone(float[][] accXYZ) {
+        Log.d("isWatchPhone","==>into func");
         float[] watchPhoneData = SensorDataUtils.transXYZ2WatchPhoneData(accXYZ);
+        Log.d("isWatchPhone","==>start classify");
         return 0 == rf_WatchPhone.voteClassifyVec(watchPhoneData);
     }
 }

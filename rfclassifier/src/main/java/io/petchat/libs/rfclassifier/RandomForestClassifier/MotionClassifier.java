@@ -57,7 +57,7 @@ public class MotionClassifier {
             } else {
                 return RIDE;
             }
-        } else if (rawXYZ.length == 6) {
+        } else if (rawXYZ[0].length == 6) {
             // to classify drive and sit, add magnetic data and normalize data first.
             rawXYZ = SensorDataUtils.normalizeMagnetXYZData(rawXYZ);
             float[] inputNormalXYZData = SensorDataUtils.transXYZ2InputData(rawXYZ, 0);

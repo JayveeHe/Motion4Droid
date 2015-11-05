@@ -84,10 +84,6 @@ public class MotionClassifier {
             // without magnetic data or input data dim !=6
             return DRIVE_OR_SIT;
         }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
     }
 
     /**

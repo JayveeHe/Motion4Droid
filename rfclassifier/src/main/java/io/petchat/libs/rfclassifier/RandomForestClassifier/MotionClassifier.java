@@ -32,7 +32,7 @@ public class MotionClassifier {
         this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_walkrun_forest_31)), "utf-8");
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_drivesit)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_nonmag)), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
         this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
@@ -133,14 +133,44 @@ public class MotionClassifier {
     }
 
     /**
+     * classify user's recent motion by RandomForest, with input data of 50 acc sensor readings.
+     *
+     * @param rawXYZ raw data of acc sensor and magnetic sensor readings,
+     *               float[50][6], (acc_x,acc_y,acc_z,mag_x,mag_y,mag_z)
+     */
+    public int simpleClassifyMotionByRF(float[][] rawXYZ) throws IOException, IndexOutOfBoundsException {
+//        try {
+        float[] inputXYZData = SensorDataUtils.transXYZ2InputData(rawXYZ, 0);//TODO throw the exception to the caller?
+        if (0 == rf_DriveSit_WalkRunRid.voteClassifyVec(inputXYZData)) {//0~walk or run or rid, 1~drive or sit
+            if (0 == rf_Rid_WalkRun.voteClassifyVec(inputXYZData)) {//1~rid, 0~walk or run
+                if (0 == rf_Walk_Run.voteClassifyVec(inputXYZData)) {//1~walk, 0~run
+                    return RUN;
+                } else {
+                    return WALK;
+                }
+            } else {
+                return RIDE;
+            }
+        } else {
+            // to classify drive and sit, add magnetic data and normalize data first.
+            if (0 == rf_Drive_Sit.voteClassifyVec(inputXYZData)) {
+                return DRIVE;
+            } else {
+                return SIT;
+            }
+        }
+    }
+
+
+    /**
      * check if the user is watching phone
      *
      * @param accXYZ acc reading of 50.
      */
     public boolean isWatchPhone(float[][] accXYZ) {
-        Log.d("isWatchPhone","==>into func");
+        Log.d("isWatchPhone", "==>into func");
         float[] watchPhoneData = SensorDataUtils.transXYZ2WatchPhoneData(accXYZ);
-        Log.d("isWatchPhone","==>start classify");
+        Log.d("isWatchPhone", "==>start classify");
         return 0 == rf_WatchPhone.voteClassifyVec(watchPhoneData);
     }
 }

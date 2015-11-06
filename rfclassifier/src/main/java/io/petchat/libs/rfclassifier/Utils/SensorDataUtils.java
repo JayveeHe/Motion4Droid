@@ -80,9 +80,9 @@ public class SensorDataUtils {
             stdAbsMax += Math.pow((absMaxList[i] - meanAbsMax), 2);
             stdAbsMin += Math.pow((absMinList[i] - meanAbsMin), 2);
         }
-        stdMod = (float) Math.sqrt(stdMod);
-        stdAbsMax = (float) Math.sqrt(stdAbsMax);
-        stdAbsMin = (float) Math.sqrt(stdAbsMin);
+        stdMod = (float) Math.sqrt(stdMod/LISTSIZE);
+        stdAbsMax = (float) Math.sqrt(stdAbsMax/LISTSIZE);
+        stdAbsMin = (float) Math.sqrt(stdAbsMin/LISTSIZE);
         return new float[]{meanAbsMax, stdAbsMax, minAbsMax, maxAbsMax,
                 meanAbsMin, stdAbsMin, minAbsMin, maxAbsMin,
                 meanMod, stdMod, minMod, maxMod};

@@ -32,7 +32,7 @@ public class MotionClassifier {
         this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_walkrun_forest_31)), "utf-8");
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_nonNorm)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_non_norm)), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
         this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));

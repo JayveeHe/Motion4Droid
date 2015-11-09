@@ -32,7 +32,7 @@ public class MotionClassifier {
         this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_walkrun_forest_31)), "utf-8");
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_nonmag)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_nonNorm)), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
         this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
@@ -136,7 +136,7 @@ public class MotionClassifier {
      * classify user's recent motion by RandomForest, with input data of 50 acc sensor readings.
      *
      * @param rawXYZ raw data of acc sensor and magnetic sensor readings,
-     *               float[50][6], (acc_x,acc_y,acc_z,mag_x,mag_y,mag_z)
+     *               float[50][3], (acc_x,acc_y,acc_z)
      */
     public int simpleClassifyMotionByRF(float[][] rawXYZ) throws IOException, IndexOutOfBoundsException {
 //        try {

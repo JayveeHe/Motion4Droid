@@ -49,14 +49,16 @@ public class SensorDataUtils {
             float absX = Math.abs(xyzdata[0]);
             float absY = Math.abs(xyzdata[1]);
             float absZ = Math.abs(xyzdata[2]);
-            if (absX > absY) {
-                absMax = absX;
-                absMin = absY;
-            } else {
-                absMax = absY;
-                absMin = absY;
-            }
+//            if (absX > absY) {
+//                absMax = absX;
+//                absMin = absY;
+//            } else {
+//                absMax = absY;
+//                absMin = absY;
+//            }
+            absMax = absX > absY ? absX : absY;
             absMax = absZ > absMax ? absZ : absMax;
+            absMin = absX < absY ? absX : absY;
             absMin = absZ < absMin ? absZ : absMin;
             modList[i] = mod;
             absMaxList[i] = absMax;
@@ -80,9 +82,9 @@ public class SensorDataUtils {
             stdAbsMax += Math.pow((absMaxList[i] - meanAbsMax), 2);
             stdAbsMin += Math.pow((absMinList[i] - meanAbsMin), 2);
         }
-        stdMod = (float) Math.sqrt(stdMod/LISTSIZE);
-        stdAbsMax = (float) Math.sqrt(stdAbsMax/LISTSIZE);
-        stdAbsMin = (float) Math.sqrt(stdAbsMin/LISTSIZE);
+        stdMod = (float) Math.sqrt(stdMod / (LISTSIZE - 1));
+        stdAbsMax = (float) Math.sqrt(stdAbsMax / (LISTSIZE - 1));
+        stdAbsMin = (float) Math.sqrt(stdAbsMin / (LISTSIZE - 1));
         return new float[]{meanAbsMax, stdAbsMax, minAbsMax, maxAbsMax,
                 meanAbsMin, stdAbsMin, minAbsMin, maxAbsMin,
                 meanMod, stdMod, minMod, maxMod};
@@ -162,11 +164,12 @@ public class SensorDataUtils {
 
     /**
      * trans XYZ data into watchphone input data
+     *
      * @param rawXYZ
      * @return
      */
     public static float[] transXYZ2WatchPhoneData(float[][] rawXYZ) {
-        Log.d("isWatchPhone","==>trans data"+rawXYZ.length+"===="+rawXYZ[0].length);
+        Log.d("isWatchPhone", "==>trans data" + rawXYZ.length + "====" + rawXYZ[0].length);
         final int LISTSIZE = rawXYZ.length;
         float meanX = 0;
         float meanY = 0;
@@ -209,9 +212,9 @@ public class SensorDataUtils {
             stdY += Math.pow((yList[i] - meanY), 2);
             stdZ += Math.pow((zList[i] - meanZ), 2);
         }
-        stdX = (float) Math.sqrt(stdX);
-        stdY = (float) Math.sqrt(stdY);
-        stdZ = (float) Math.sqrt(stdZ);
+        stdX = (float) Math.sqrt(stdX / (LISTSIZE - 1));
+        stdY = (float) Math.sqrt(stdY / (LISTSIZE - 1));
+        stdZ = (float) Math.sqrt(stdZ / (LISTSIZE - 1));
         return new float[]{meanY, stdY, minY, maxY,
                 meanZ, stdZ, minZ, maxZ,
                 meanX, stdX, minX, maxX};

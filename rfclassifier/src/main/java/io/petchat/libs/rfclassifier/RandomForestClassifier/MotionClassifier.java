@@ -26,11 +26,11 @@ public class MotionClassifier {
     private RandomForest rf_WatchPhone;
 
     public MotionClassifier(Context context) throws IOException {
-        String str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_drivesit_walkrunrid)), "utf-8");
+        String str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_drivesit_walkrunrid)), "utf-8");
         this.rf_DriveSit_WalkRunRid = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rid_walkrun_forest_31)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_rid_walkrun)), "utf-8");
         this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_walkrun_forest_31)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_walkrun)), "utf-8");
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
         str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_non_norm)), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));

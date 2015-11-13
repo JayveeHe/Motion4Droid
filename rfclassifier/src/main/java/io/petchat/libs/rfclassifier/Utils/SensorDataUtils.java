@@ -49,13 +49,6 @@ public class SensorDataUtils {
             float absX = Math.abs(xyzdata[0]);
             float absY = Math.abs(xyzdata[1]);
             float absZ = Math.abs(xyzdata[2]);
-//            if (absX > absY) {
-//                absMax = absX;
-//                absMin = absY;
-//            } else {
-//                absMax = absY;
-//                absMin = absY;
-//            }
             absMax = absX > absY ? absX : absY;
             absMax = absZ > absMax ? absZ : absMax;
             absMin = absX < absY ? absX : absY;

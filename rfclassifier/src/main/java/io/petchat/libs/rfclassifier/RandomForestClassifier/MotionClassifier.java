@@ -7,6 +7,8 @@ import io.petchat.libs.rfclassifier.Utils.FileUtils;
 import io.petchat.libs.rfclassifier.Utils.SensorDataUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jayvee on 15/11/1.
@@ -153,7 +155,7 @@ public class MotionClassifier {
             }
         } else {
             // to classify drive and sit, add magnetic data and normalize data first.
-            if (0 == rf_Drive_Sit.voteClassifyVec(inputXYZData)) {
+            if (0 == rf_Drive_Sit.voteClassifyVec(inputXYZData)) {//0~drive,1~sit
                 return DRIVE;
             } else {
                 return SIT;
@@ -161,6 +163,25 @@ public class MotionClassifier {
         }
     }
 
+    public Map<String, Float> probClassifyMotionByRF(float[][] rawXYZ) throws IOException, IndexOutOfBoundsException {
+        float[] inputXYZData = SensorDataUtils.transXYZ2InputData(rawXYZ, 0);//TODO throw the exception to the caller?
+        float[][] drivesit_walkrunrid_result = rf_DriveSit_WalkRunRid.getClassifyProb(inputXYZData);
+        float[][] rid_walkrun_result = rf_Rid_WalkRun.getClassifyProb(inputXYZData);
+        float[][] walk_run_result = rf_Walk_Run.getClassifyProb(inputXYZData);
+        float[][] drive_sit_result = rf_Drive_Sit.getClassifyProb(inputXYZData);
+        Map<String, Float> mapResult = new HashMap<>();
+        float driveProb = drivesit_walkrunrid_result[1][1] * drive_sit_result[0][1];
+        float sitProb = drivesit_walkrunrid_result[1][1] * drive_sit_result[1][1];
+        float rideProb = drivesit_walkrunrid_result[0][1] * rid_walkrun_result[1][1];
+        float walkProb = drivesit_walkrunrid_result[0][1] * rid_walkrun_result[0][1] * walk_run_result[1][1];
+        float runProb = drivesit_walkrunrid_result[0][1] * rid_walkrun_result[0][1] * walk_run_result[0][1];
+        mapResult.put("drive", driveProb);
+        mapResult.put("sit", sitProb);
+        mapResult.put("ride", rideProb);
+        mapResult.put("walk", walkProb);
+        mapResult.put("run", runProb);
+        return mapResult;
+    }
 
     /**
      * check if the user is watching phone

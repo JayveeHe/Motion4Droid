@@ -29,9 +29,27 @@ public class RandomForest {
             float weight = (float) singleDecisionTree.get("weight");
             DecisionTree tree = (DecisionTree) singleDecisionTree.get("tree");
             float label = tree.calLabel(inputVec);
-            votes[label > 0 ? 1 : 0]++;
+            votes[label > 0 ? 1 : 0] += 1;
         }
+
+//        return result;
         return votes[0] > votes[1] ? 0 : 1;
+    }
+
+    public float[][] getClassifyProb(float[] inputVec) {
+        int[] votes = new int[2];
+        float[][] result = new float[2][2];
+        for (Map singleDecisionTree : forest) {
+            float weight = (float) singleDecisionTree.get("weight");
+            DecisionTree tree = (DecisionTree) singleDecisionTree.get("tree");
+            float label = tree.calLabel(inputVec);
+            result[label > 0 ? 1 : 0][0] += 1.0f;
+        }
+        result[0][1] = result[0][0] / forest.size();
+        result[1][1] = result[1][0] / forest.size();
+
+        return result;
+//        return votes[0] > votes[1] ? 0 : 1;
     }
 
     public static ArrayList<Map> loadRandomForestByFile(String jsonPath) {
@@ -50,6 +68,7 @@ public class RandomForest {
         }
         return randomForest;
     }
+
     public static ArrayList<Map> loadRandomForestByJSON(String jsonStr) {
         List<Map<String, Map>> forest = (List<Map<String, Map>>) JSON.parse(jsonStr);
         System.out.println(forest);

@@ -1,6 +1,7 @@
 package io.petchat.libs.rfclassifier.RandomForestClassifier;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 import io.petchat.libs.rfclassifier.R;
 import io.petchat.libs.rfclassifier.Utils.FileUtils;
@@ -28,16 +29,28 @@ public class MotionClassifier {
     private RandomForest rf_WatchPhone;
 
     public MotionClassifier(Context context) throws IOException {
-        String str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_drivesit_walkrunrid)), "utf-8");
+        // loading assets resources
+        AssetManager assetManager = context.getAssets();
+        String str_params = new String(FileUtils.InputStreamTOByte(assetManager.open("rf_para_drivesit_walkrunrid.json")), "utf-8");
         this.rf_DriveSit_WalkRunRid = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_rid_walkrun)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(assetManager.open("rf_para_rid_walkrun.json")), "utf-8");
         this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_walkrun)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(assetManager.open("rf_para_walkrun.json")), "utf-8");
         this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_non_norm)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(assetManager.open("rf_para_drivesit_non_norm.json")), "utf-8");
         this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
-        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
+        str_params = new String(FileUtils.InputStreamTOByte(assetManager.open("rf_para_watchphone.json")), "utf-8");
         this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
+//        String str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_drivesit_walkrunrid)), "utf-8");
+//        this.rf_DriveSit_WalkRunRid = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
+//        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_rid_walkrun)), "utf-8");
+//        this.rf_Rid_WalkRun = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
+//        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_rf_para_walkrun)), "utf-8");
+//        this.rf_Walk_Run = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
+//        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.rf_para_drivesit_non_norm)), "utf-8");
+//        this.rf_Drive_Sit = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
+//        str_params = new String(FileUtils.InputStreamTOByte(context.getResources().openRawResource(R.raw.para_watchphone)), "utf-8");
+//        this.rf_WatchPhone = new RandomForest(RandomForest.loadRandomForestByJSON(str_params));
     }
 
     /**

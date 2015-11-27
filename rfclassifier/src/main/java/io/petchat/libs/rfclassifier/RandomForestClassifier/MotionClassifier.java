@@ -3,7 +3,6 @@ package io.petchat.libs.rfclassifier.RandomForestClassifier;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
-import io.petchat.libs.rfclassifier.R;
 import io.petchat.libs.rfclassifier.Utils.FileUtils;
 import io.petchat.libs.rfclassifier.Utils.SensorDataUtils;
 
